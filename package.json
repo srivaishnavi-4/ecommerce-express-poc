@@ -1,0 +1,25 @@
+{
+  "name": "ecommerce-express-poc",
+  "version": "1.0.0",
+  "description": "Secure Express ecommerce authentication POC with MongoDB and end-to-end integration tests",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test tests/auth.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.18.0",
+    "supertest": "^7.1.4"
+  }
+}
