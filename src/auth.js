@@ -6,8 +6,8 @@ async function hashPassword(password) {
     return bcrypt.hash(password, 12);
 }
 
-async function comparePassword(password, hashedPassword) {
-    return bcrypt.compare(password, hashedPassword);
+async function comparePassword(password, hash) {
+    return bcrypt.compare(password, hash);
 }
 
 function createToken(user) {
@@ -16,14 +16,9 @@ function createToken(user) {
     }
 
     return jwt.sign(
-        {
-            userId: user._id.toString(),
-            role: user.role
-        },
+        { userId: user._id.toString(), role: user.role },
         process.env.JWT_SECRET,
-        {
-            expiresIn: "1h"
-        }
+        { expiresIn: "1h" }
     );
 }
 
@@ -47,8 +42,7 @@ function authenticate(req, res, next) {
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded;
+        req.user = jwt.verify(token, process.env.JWT_SECRET);
         next();
     } catch {
         return res.status(401).json({

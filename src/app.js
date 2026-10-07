@@ -1,78 +1,105 @@
 const express = require("express");
-const helmet = require("helmet");
 const cors = require("cors");
+const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
-const routes = require("./routes");
+const path = require("path");
+
+const router = require("./routes");
 
 const app = express();
 
-const helmetEnabled = process.env.HELMET_ENABLED === "true";
-const corsEnabled = process.env.CORS_ENABLED === "true";
-const rateLimitEnabled = process.env.RATE_LIMIT_ENABLED === "true";
 
-if (helmetEnabled) {
+// SECURITY
+if (process.env.HELMET_ENABLED !== "false") {
     app.use(helmet());
 }
 
-if (corsEnabled) {
-    const allowedOrigin = process.env.CLIENT_URL;
 
-    app.use(
-        cors({
-            origin: allowedOrigin || false,
-            credentials: true
-        })
-    );
+// CORS
+if (process.env.CORS_ENABLED !== "false") {
+    app.use(cors());
 }
 
-app.use(
-    express.json({
-        limit: "10kb"
-    })
-);
 
-if (rateLimitEnabled) {
+// BODY PARSER
+app.use(express.json({ limit: "10kb" }));
+
+
+// RATE LIMIT
+if (process.env.RATE_LIMIT_ENABLED !== "false") {
+
     const limiter = rateLimit({
-        windowMs:
-            Number(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
-        limit:
-            Number(process.env.RATE_LIMIT_MAX) || 100,
-        standardHeaders: "draft-8",
-        legacyHeaders: false,
-        message: {
-            success: false,
-            message: "Too many requests. Try again later."
-        }
+        windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
+        max: Number(process.env.RATE_LIMIT_MAX) || 100
     });
 
     app.use(limiter);
 }
 
+
+// FRONTEND
+app.use(express.static(path.join(__dirname, "../public")));
+
+
+// HEALTH CHECK
 app.get("/health", (req, res) => {
+
     res.status(200).json({
         success: true,
-        message: "Server is healthy",
-        environment: process.env.NODE_ENV
+        environment: process.env.NODE_ENV || "development"
     });
+
 });
 
-app.use("/api/auth", routes);
 
+// API
+app.use("/api", router);
+
+
+// FRONTEND
+app.get("/", (req, res) => {
+
+    res.sendFile(
+        path.join(__dirname, "../public/index.html")
+    );
+
+});
+
+
+// 404 HANDLER
 app.use((req, res) => {
+
     res.status(404).json({
         success: false,
-        message: `Route ${req.method} ${req.originalUrl} not found`
+        message: "Route not found"
     });
+
 });
 
+
+// CENTRAL ERROR HANDLER
 app.use((error, req, res, next) => {
-    console.error(error);
+
+    console.error("SERVER ERROR:", error);
 
     if (error.code === 11000) {
+
         return res.status(409).json({
             success: false,
             message: "Duplicate value already exists"
         });
+
+    }
+
+    if (error.name === "ValidationError") {
+
+        return res.status(400).json({
+            success: false,
+            errors: Object.values(error.errors).map(
+                err => err.message
+            )
+        });
+
     }
 
     res.status(500).json({
@@ -82,6 +109,8 @@ app.use((error, req, res, next) => {
                 ? "Internal server error"
                 : error.message
     });
+
 });
+
 
 module.exports = app;

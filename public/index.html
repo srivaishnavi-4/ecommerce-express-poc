@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f2f4ef">
+    <title>Good Goods | Catalog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main id="authScreen" class="auth-screen">
+        <section class="auth-visual" aria-label="Good Goods collection">
+            <a class="brand brand-light" href="#" aria-label="Good Goods home">
+                <span class="brand-mark" aria-hidden="true">g.</span>
+                <span>good goods</span>
+            </a>
+            <div class="visual-copy">
+                <p class="eyebrow">A considered collection</p>
+                <h1>Objects with a little more meaning.</h1>
+                <p>Thoughtful finds, made to be used and loved every day.</p>
+            </div>
+            <p class="visual-caption">The everyday edit <span>—</span> 2025</p>
+        </section>
+
+        <section class="auth-panel">
+            <div class="auth-panel-top">
+                <a class="brand brand-dark" href="#" aria-label="Good Goods home">
+                    <span class="brand-mark" aria-hidden="true">g.</span>
+                    <span>good goods</span>
+                </a>
+                <span class="auth-kicker">YOUR SHOP, IN GOOD ORDER</span>
+            </div>
+
+            <div class="auth-content">
+                <div id="loginView" class="auth-view">
+                    <p class="eyebrow">Welcome back</p>
+                    <h2>Sign in to your shop</h2>
+                    <p class="auth-intro">Your collection is right where you left it.</p>
+                    <form id="loginForm" class="stack-form">
+                        <label for="loginEmail">Email address</label>
+                        <input id="loginEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+                        <label for="loginPassword">Password</label>
+                        <input id="loginPassword" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required>
+                        <button class="button button-primary button-wide" type="submit">Sign in <span aria-hidden="true">→</span></button>
+                    </form>
+                    <p id="loginMessage" class="form-message" aria-live="polite"></p>
+                    <p class="auth-switch">New around here? <button class="text-button" type="button" data-show-view="registerView">Create an account</button></p>
+                </div>
+
+                <div id="registerView" class="auth-view" hidden>
+                    <p class="eyebrow">Make it yours</p>
+                    <h2>Set up your shop</h2>
+                    <p class="auth-intro">Create an account to curate your product collection.</p>
+                    <form id="registerForm" class="stack-form">
+                        <label for="registerName">Your name</label>
+                        <input id="registerName" name="name" autocomplete="name" placeholder="Name" required minlength="2">
+                        <label for="registerEmail">Email address</label>
+                        <input id="registerEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+                        <label for="registerPassword">Password</label>
+                        <input id="registerPassword" name="password" type="password" autocomplete="new-password" placeholder="At least 8 characters" minlength="8" required>
+                        <button class="button button-primary button-wide" type="submit">Create account <span aria-hidden="true">→</span></button>
+                    </form>
+                    <p id="registerMessage" class="form-message" aria-live="polite"></p>
+                    <p class="auth-switch">Already have an account? <button class="text-button" type="button" data-show-view="loginView">Sign in</button></p>
+                </div>
+            </div>
+            <p class="auth-footnote">A good place for good things.</p>
+        </section>
+    </main>
+
+    <div id="storeScreen" class="store-screen" hidden>
+        <header class="topbar">
+            <a class="brand brand-dark" href="#" aria-label="Good Goods catalog">
+                <span class="brand-mark" aria-hidden="true">g.</span>
+                <span>good goods</span>
+            </a>
+            <div class="topbar-tools">
+                <span id="accountName" class="account-name"></span>
+                <span id="accountRole" class="role-pill"></span>
+                <button id="logoutButton" class="button button-quiet" type="button">Sign out</button>
+            </div>
+        </header>
+
+        <main class="catalog-main">
+            <section class="catalog-heading">
+                <div>
+                    <p class="eyebrow">The collection</p>
+                    <h1>Your product catalog</h1>
+                    <p class="catalog-intro">A clear view of everything you have to offer.</p>
+                </div>
+                <button id="openProductDialog" class="button button-primary" type="button"><span class="plus-mark" aria-hidden="true">+</span> Add a product</button>
+            </section>
+
+            <section class="catalog-toolbar" aria-label="Catalog controls">
+                <label class="search-field">
+                    <span class="search-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Search products</span>
+                    <input id="searchInput" type="search" placeholder="Search your collection...">
+                </label>
+                <label class="filter-field">
+                    <span class="visually-hidden">Filter by category</span>
+                    <select id="categoryFilter" aria-label="Filter by category">
+                        <option value="all">All categories</option>
+                    </select>
+                </label>
+                <button id="refreshButton" class="button button-outline" type="button"><span class="refresh-mark" aria-hidden="true">↻</span> Refresh</button>
+            </section>
+
+            <div class="catalog-meta">
+                <p id="productCount" aria-live="polite">Loading collection...</p>
+                <span class="catalog-rule" aria-hidden="true"></span>
+            </div>
+            <p id="catalogMessage" class="catalog-message" role="status" aria-live="polite"></p>
+            <section id="products" class="products-grid" aria-label="Products"></section>
+        </main>
+    </div>
+
+    <dialog id="productDialog" class="product-dialog">
+        <form id="productForm" class="dialog-form">
+            <div class="dialog-heading">
+                <div>
+                    <p class="eyebrow">Add to the collection</p>
+                    <h2>New product</h2>
+                </div>
+                <button id="closeProductDialog" class="icon-button" type="button" aria-label="Close dialog">×</button>
+            </div>
+            <label for="productName">Product name</label>
+            <input id="productName" name="name" placeholder="e.g. Everyday ceramic mug" required minlength="2">
+            <label for="productDescription">Description</label>
+            <textarea id="productDescription" name="description" rows="3" placeholder="What makes it special?" required></textarea>
+            <div class="form-pair">
+                <div>
+                    <label for="productPrice">Price</label>
+                    <div class="input-affix"><span>₹</span><input id="productPrice" name="price" type="number" min="0" step="0.01" placeholder="0.00" required></div>
+                </div>
+                <div>
+                    <label for="productStock">Stock</label>
+                    <input id="productStock" name="stock" type="number" min="0" step="1" placeholder="0" required>
+                </div>
+            </div>
+            <label for="productCategory">Category</label>
+            <input id="productCategory" name="category" placeholder="e.g. Home, Clothing" required>
+            <label for="productImage">Image URL <span class="optional-label">Optional</span></label>
+            <input id="productImage" name="image" type="url" placeholder="https://example.com/image.jpg">
+            <p id="productMessage" class="form-message" aria-live="polite"></p>
+            <div class="dialog-actions">
+                <button id="cancelProductDialog" class="button button-outline" type="button">Cancel</button>
+                <button class="button button-primary" type="submit">Save product <span aria-hidden="true">→</span></button>
+            </div>
+        </form>
+    </dialog>
+
+    <script src="app.js"></script>
+</body>
+</html>
