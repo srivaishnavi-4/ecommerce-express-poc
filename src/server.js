@@ -5,6 +5,10 @@ const { connectDatabase, disconnectDatabase } = require("./db");
 const { connectRedis, disconnectRedis } = require("./cache");
 
 const PORT = process.env.PORT || 5000;
+
+console.log("Render PORT:", process.env.PORT);
+console.log("Using PORT:", PORT);
+
 let server;
 let isShuttingDown = false;
 
@@ -15,7 +19,7 @@ async function startServer() {
 
         server = app.listen(PORT, "0.0.0.0", () => {
             console.log(`Server running on port ${PORT}`);
-            console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
+            console.log(`Environment: ${process.env.NODE_ENV || "production"}`);
         });
     } catch (error) {
         console.error("Startup failed:", error.message);
